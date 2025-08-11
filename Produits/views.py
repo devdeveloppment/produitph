@@ -3,6 +3,7 @@ from django.db import transaction
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
+from django.db.models import Sum, Count
 
 from .models import*
 
@@ -77,7 +78,8 @@ def liste_produit(request):
     if categorie_id:
         produits = produits.filter(categorie_id=categorie_id)
     categories = Categorie.objects.all()
-    return render(request, 'liste_produit.html', { 'produits': produits, 'categories': categories, 'q': q, 'categorie_id': categorie_id })
+    customers = Customer.objects.all().order_by('name')
+    return render(request, 'liste_produit.html', { 'produits': produits, 'categories': categories, 'customers': customers, 'q': q, 'categorie_id': categorie_id })
 
 
 def vendre_produit(request, produit_id):
@@ -203,6 +205,48 @@ def facture_pdf(request, vente_id):
     p.showPage()
     p.save()
     return response
+
+
+def statistiques(request):
+    total_produits = Produit.objects.count()
+    total_stock = Produit.objects.aggregate(total=Sum('quantite'))['total'] or 0
+    total_ventes = Vente.objects.aggregate(total=Sum('total_vente'))['total'] or 0
+    nb_ventes = Vente.objects.count()
+    top_produits = (Vente.objects.values('produit__nom')
+                    .annotate(q=Sum('quantite'))
+                    .order_by('-q')[:5])
+    # Produits proches de la rupture
+    faibles = Produit.objects.filter(quantite__lte=10).count()
+
+    return render(request, 'stats.html', {
+        'total_produits': total_produits,
+        'total_stock': total_stock,
+        'total_ventes': total_ventes,
+        'nb_ventes': nb_ventes,
+        'top_produits': top_produits,
+        'faibles': faibles,
+    })
+
+
+def notifications(request):
+    # Notifications basiques: produits en rupture/ faibles + expirations proches
+    alerts = []
+    for p in Produit.objects.all():
+        if p.quantite == 0:
+            alerts.append({ 'type': 'danger', 'message': f"Rupture: {p.nom}" })
+        elif p.quantite <= 10:
+            alerts.append({ 'type': 'warning', 'message': f"Stock faible ({p.quantite}): {p.nom}" })
+        if p.date_expiration:
+            from datetime import date, timedelta
+            if p.date_expiration <= date.today() + timedelta(days=7):
+                alerts.append({ 'type': 'info', 'message': f"Expire bientôt ({p.date_expiration}): {p.nom}" })
+    return render(request, 'notifications.html', { 'alerts': alerts })
+
+
+def inbox(request):
+    # Boîte de réception simple: dernières ventes assimilées à messages
+    messages = Vente.objects.select_related('produit').order_by('-sale_date')[:20]
+    return render(request, 'inbox.html', { 'messages': messages })
  
 
 

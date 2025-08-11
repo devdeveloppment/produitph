@@ -16,4 +16,8 @@ urlpatterns = [
 
     path('ventes/', liste_ventes, name='ventes'),
     path('facture/<int:vente_id>/', facture_pdf, name='facture-pdf'),
+
+    path('stats/', statistiques, name='stats'),
+    path('notifications/', notifications, name='notifications'),
+    path('inbox/', inbox, name='inbox'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  
