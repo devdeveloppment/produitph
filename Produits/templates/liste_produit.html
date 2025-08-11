@@ -350,19 +350,18 @@
               </td>
               <td>
                 <div class="actions">
-                  <button class="action-btn edit" title="Voir le produit">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
-                    </svg>
-                  </button>
-                  <button class="action-btn cart" title="Ajouter au panier">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="8" cy="21" r="1"/>
-                      <circle cx="19" cy="21" r="1"/>
-                      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
-                    </svg>
-                  </button>
+                  <form method="post" action="{% url 'vendre-produit' produit.id %}" style="display:flex; gap:6px; align-items:center;">
+                    {% csrf_token %}
+                    <input type="number" name="quantite" min="1" max="{{ produit.quantite }}" value="1" style="width:70px" />
+                    <input type="text" name="customer" placeholder="Client" required style="width:120px" />
+                    <button type="submit" class="action-btn cart" title="Vendre">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="8" cy="21" r="1"/>
+                        <circle cx="19" cy="21" r="1"/>
+                        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+                      </svg>
+                    </button>
+                  </form>
                 </div>
               </td>
             </tr>

@@ -5,4 +5,5 @@ from django.conf import settings
 urlpatterns = [
     path('', liste_produit , name='liste'),
     path('ajout/', ajout_produits, name='ajout-produit'),
+    path('vendre/<int:produit_id>/', vendre_produit, name='vendre-produit'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  
