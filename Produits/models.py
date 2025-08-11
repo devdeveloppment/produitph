@@ -21,12 +21,12 @@ class Produit(models.Model):
         ordering = ['-date_ajout']
 
     def statut_quantite(self):
-        if self.quantite > 10:
-            return 'rouge'
+        if self.quantite == 0:
+            return 'rupture'
         elif self.quantite <= 10:
-            return 'orange'
+            return 'faible'
         else:
-            return 'vert'
+            return 'disponible'
 
     def __str__(self):
         return self.nom

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block body %}
+<h2>Ajouter un produit</h2>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div>
+    <label for="nom">Nom</label>
+    <input type="text" id="nom" name="nom" required />
+  </div>
+  <div>
+    <label for="categorie">Catégorie</label>
+    <select id="categorie" name="categorie">
+      <option value="">-- Choisir --</option>
+      {% for c in categories %}
+      <option value="{{ c.id }}">{{ c.nom }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="prix">Prix</label>
+    <input type="number" id="prix" name="prix" step="1" min="0" required />
+  </div>
+  <div>
+    <label for="quantite">Quantité</label>
+    <input type="number" id="quantite" name="quantite" step="1" min="0" required />
+  </div>
+  <div>
+    <label for="date_expiration">Date d'expiration</label>
+    <input type="date" id="date_expiration" name="date_expiration" />
+  </div>
+  <div>
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="3"></textarea>
+  </div>
+  <div>
+    <label for="image">Image</label>
+    <input type="file" id="image" name="image" accept="image/*" />
+  </div>
+  <button type="submit">Enregistrer</button>
+</form>
+{% endblock %}

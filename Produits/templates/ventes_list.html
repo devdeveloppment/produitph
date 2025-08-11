@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block body %}
+<h2>Ventes</h2>
+<p>
+  <a href="{% url 'liste' %}">Produits</a> | 
+  <a href="{% url 'clients' %}">Clients</a>
+</p>
+<table class="products-table">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Client</th>
+      <th>Produit</th>
+      <th>Quantité</th>
+      <th>Total (€)</th>
+      <th>Facture</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for v in ventes %}
+      <tr>
+        <td>{{ v.sale_date|date:'d/m/Y H:i' }}</td>
+        <td>{{ v.customer }}</td>
+        <td>{{ v.produit.nom }}</td>
+        <td>{{ v.quantite }}</td>
+        <td>{{ v.total_vente }}</td>
+        <td><a href="{% url 'facture-pdf' v.id %}" target="_blank">PDF</a></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6">Aucune vente</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

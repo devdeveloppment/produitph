@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block body %}
+<h2>{% if action == 'ajout' %}Ajouter un client{% else %}Modifier le client{% endif %}</h2>
+<form method="post">
+  {% csrf_token %}
+  <div>
+    <label for="name">Nom</label>
+    <input type="text" id="name" name="name" required value="{{ client.name|default:'' }}" />
+  </div>
+  <button type="submit">Enregistrer</button>
+  <a href="{% url 'clients' %}">Annuler</a>
+</form>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block body %}
+<h2>Boîte de réception</h2>
+<ul>
+  {% for m in messages %}
+    <li>
+      <strong>{{ m.customer }}</strong> a acheté {{ m.quantite }} × {{ m.produit.nom }} ({{ m.sale_date|date:'d/m/Y H:i' }}) — <a href="{% url 'facture-pdf' m.id %}" target="_blank">Facture</a>
+    </li>
+  {% empty %}
+    <li>Pas de messages</li>
+  {% endfor %}
+</ul>
+{% endblock %}

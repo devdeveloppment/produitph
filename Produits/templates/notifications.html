@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block body %}
+<h2>Notifications</h2>
+<ul>
+  {% for n in alerts %}
+  <li style="margin:6px 0;">
+    {% if n.type == 'danger' %}
+      <span style="color:#dc3545">❗</span>
+    {% elif n.type == 'warning' %}
+      <span style="color:#ffc107">⚠️</span>
+    {% else %}
+      <span style="color:#17a2b8">ℹ️</span>
+    {% endif %}
+    {{ n.message }}
+  </li>
+  {% empty %}
+  <li>Aucune notification</li>
+  {% endfor %}
+</ul>
+{% endblock %}
